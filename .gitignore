@@ -1,0 +1,11 @@
+﻿# Dependencies
+node_modules/
+.pnpm-store/
+# Build outputs
+.next/
+out/
+dist/
+# Env and local
+.env*
+*.log
+.DS_Store
