@@ -58,6 +58,7 @@ const InterviewCard = async ({
             width={90}
             height={90}
             className="rounded-full object-fit size-[90px]"
+            priority
           />
 
           {/* Interview Role */}
@@ -71,12 +72,13 @@ const InterviewCard = async ({
                 width={22}
                 height={22}
                 alt="calendar"
+                priority
               />
               <p>{formattedDate}</p>
             </div>
 
             <div className="flex flex-row gap-2 items-center">
-              <Image src="/star.svg" width={22} height={22} alt="star" />
+              <Image src="/star.svg" width={22} height={22} alt="star" priority />
               <p>{feedback?.totalScore || "---"}/100</p>
             </div>
           </div>
