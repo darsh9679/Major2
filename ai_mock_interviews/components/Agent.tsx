@@ -51,6 +51,7 @@ const Agent = ({
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [lastMessage, setLastMessage] = useState<string>("");
 
   // build-time env var (NEXT_PUBLIC_ is safe to access in client builds)
   const WORKFLOW_ID = process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID ?? "";
@@ -65,18 +66,21 @@ const Agent = ({
     };
 
     const onMessage = (message: VapiMessage) => {
-      // defensive checks: only handle final transcripts
+      // Only persist unique final transcripts; ignore duplicate finals that some providers resend
       if (
-        message &&
-        message.type === "transcript" &&
-        message.transcriptType === "final" &&
-        typeof message.transcript === "string"
+        message?.type === "transcript" &&
+        message?.transcriptType === "final" &&
+        typeof message?.transcript === "string"
       ) {
-        const newMessage: SavedMessage = {
-          role: (message.role as SavedMessage["role"]) ?? "assistant",
-          content: message.transcript,
-        };
-        setMessages((prev) => [...prev, newMessage]);
+        const trimmed = message.transcript.trim();
+        setMessages((prev) => {
+          const last = prev[prev.length - 1]?.content?.trim();
+          if (last && last === trimmed) return prev;
+          return [
+            ...prev,
+            { role: (message.role as SavedMessage["role"]) ?? "assistant", content: trimmed },
+          ];
+        });
       }
     };
 
@@ -249,11 +253,14 @@ const Agent = ({
       {messages.length > 0 && (
         <div className="transcript-border">
           <div className="transcript">
-            {messages.map((m, idx) => (
-              <p key={`${m.content}-${idx}`} className={cn("transition-opacity duration-500", "animate-fadeIn")}>
-                {m.content}
-              </p>
-            ))}
+            {(() => {
+              const last = messages[messages.length - 1];
+              return (
+                <p key={`${last.content}-${messages.length - 1}`} className={cn("transition-opacity duration-500", "animate-fadeIn")}>
+                  {last.content}
+                </p>
+              );
+            })()}
           </div>
         </div>
       )}
