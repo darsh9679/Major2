@@ -25,7 +25,7 @@ async function Home() {
   const hasUpcomingInterviews = allInterview?.length! > 0;
 
   return (
-    <>
+    <div className="space-y-8">
       <section className="card-cta">
         <div className="flex flex-col gap-6 max-w-lg">
           <h2>Get Interview-Ready with AI-Powered Practice & Feedback</h2>
@@ -47,7 +47,7 @@ async function Home() {
         />
       </section>
 
-      <section className="flex flex-col gap-6 mt-8">
+      <section className="flex flex-col gap-6">
         <h2>Your Interviews</h2>
 
         <div className="interviews-section">
@@ -69,7 +69,7 @@ async function Home() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-6 mt-8">
+      <section className="flex flex-col gap-6">
         <h2>Take Interviews</h2>
 
         <div className="interviews-section">
@@ -90,7 +90,7 @@ async function Home() {
           )}
         </div>
       </section>
-    </>
+    </div>
   );
 }
 
